@@ -23096,6 +23096,8 @@ var _react = __webpack_require__(21);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = __webpack_require__(234);
+
 var _axios = __webpack_require__(192);
 
 var _axios2 = _interopRequireDefault(_axios);
@@ -23172,9 +23174,13 @@ var App = function (_Component) {
           'Users and Things'
         ),
         _react2.default.createElement(_Nav2.default, null),
-        _react2.default.createElement(_UserList2.default, { users: users }),
-        _react2.default.createElement(_ThingList2.default, { things: things }),
-        _react2.default.createElement(_Home2.default, null)
+        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
+        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/users', render: function render() {
+            return _react2.default.createElement(_UserList2.default, { users: users });
+          } }),
+        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/things', render: function render() {
+            return _react2.default.createElement(_ThingList2.default, { things: things });
+          } })
       );
     }
   }]);
@@ -24188,6 +24194,8 @@ var _react = __webpack_require__(21);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = __webpack_require__(234);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Tab = function Tab(_ref) {
@@ -24197,8 +24205,8 @@ var Tab = function Tab(_ref) {
     'li',
     null,
     _react2.default.createElement(
-      'a',
-      { href: tab.path },
+      _reactRouterDom.Link,
+      { to: tab.path },
       tab.title
     )
   );

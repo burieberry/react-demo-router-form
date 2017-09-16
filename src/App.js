@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
 import axios from 'axios';
 import UserList from './UserList';
 import ThingList from './ThingList';
@@ -34,9 +35,9 @@ class App extends Component{
        <div className="container">
         <h1>Users and Things</h1>
         <Nav />
-        <UserList users={ users } />
-        <ThingList  things={ things } />
-        <Home />
+        <Route exact path="/" component={ Home } />
+        <Route exact path="/users" render={ () => <UserList users={ users } /> } />
+        <Route exact path="/things" render={ () => <ThingList things={ things } /> } />
        </div>
     )
   }

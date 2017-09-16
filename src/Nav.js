@@ -1,9 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Tab = ({ tab }) => {
   return (
     <li>
-      <a href={ tab.path }>{ tab.title }</a>
+      <Link to={ tab.path }>{ tab.title }</Link>
     </li>
   )
 }
