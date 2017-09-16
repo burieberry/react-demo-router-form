@@ -34,12 +34,12 @@ class App extends Component{
     return (
        <div className="container">
         <h1>Users and Things</h1>
-        <Nav />
+        <Route component={ Nav } />
         <Route exact path="/" component={ Home } />
         <Route exact path="/users" render={ () => <UserList users={ users } /> } />
         <Route exact path="/things" render={ () => <ThingList things={ things } /> } />
        </div>
-    )
+    );
   }
 }
 

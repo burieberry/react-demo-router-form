@@ -1,15 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Tab = ({ tab }) => {
+const Tab = ({ tab, path }) => {
   return (
-    <li>
+    <li className={ path === tab.path ? 'active' : null }>
       <Link to={ tab.path }>{ tab.title }</Link>
     </li>
   )
 }
 
-const Nav = () => {
+const Nav = ({ location }) => {
+  const path = location.pathname;
   const tabs = [
     {
       title: 'Home',
@@ -26,9 +27,9 @@ const Nav = () => {
   ];
 
   return (
-    <ul className="nav nav-tabs">
+    <ul className="nav nav-tabs" style={{ marginBottom: '10px' }}>
       {
-        tabs.map(tab => <Tab key={ tab.path } tab={ tab } />)
+        tabs.map(tab => <Tab key={ tab.path } tab={ tab } path={ path } />)
       }
     </ul>
   );

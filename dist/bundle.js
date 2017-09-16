@@ -23173,7 +23173,7 @@ var App = function (_Component) {
           null,
           'Users and Things'
         ),
-        _react2.default.createElement(_Nav2.default, null),
+        _react2.default.createElement(_reactRouterDom.Route, { component: _Nav2.default }),
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/users', render: function render() {
             return _react2.default.createElement(_UserList2.default, { users: users });
@@ -24199,11 +24199,12 @@ var _reactRouterDom = __webpack_require__(234);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Tab = function Tab(_ref) {
-  var tab = _ref.tab;
+  var tab = _ref.tab,
+      path = _ref.path;
 
   return _react2.default.createElement(
     'li',
-    null,
+    { className: path === tab.path ? 'active' : null },
     _react2.default.createElement(
       _reactRouterDom.Link,
       { to: tab.path },
@@ -24212,7 +24213,10 @@ var Tab = function Tab(_ref) {
   );
 };
 
-var Nav = function Nav() {
+var Nav = function Nav(_ref2) {
+  var location = _ref2.location;
+
+  var path = location.pathname;
   var tabs = [{
     title: 'Home',
     path: '/'
@@ -24226,9 +24230,9 @@ var Nav = function Nav() {
 
   return _react2.default.createElement(
     'ul',
-    { className: 'nav nav-tabs' },
+    { className: 'nav nav-tabs', style: { marginBottom: '10px' } },
     tabs.map(function (tab) {
-      return _react2.default.createElement(Tab, { key: tab.path, tab: tab });
+      return _react2.default.createElement(Tab, { key: tab.path, tab: tab, path: path });
     })
   );
 };
