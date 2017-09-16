@@ -23173,7 +23173,9 @@ var App = function (_Component) {
           null,
           'Users and Things'
         ),
-        _react2.default.createElement(_reactRouterDom.Route, { component: _Nav2.default }),
+        _react2.default.createElement(_reactRouterDom.Route, { render: function render(router) {
+            return _react2.default.createElement(_Nav2.default, { users: users, things: things, router: router });
+          } }),
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/users', render: function render() {
             return _react2.default.createElement(_UserList2.default, { users: users });
@@ -24208,24 +24210,35 @@ var Tab = function Tab(_ref) {
     _react2.default.createElement(
       _reactRouterDom.Link,
       { to: tab.path },
-      tab.title
+      tab.title,
+      tab.count === undefined ? null : _react2.default.createElement(
+        'span',
+        null,
+        ' (',
+        tab.count,
+        ')'
+      )
     )
   );
 };
 
 var Nav = function Nav(_ref2) {
-  var location = _ref2.location;
+  var router = _ref2.router,
+      users = _ref2.users,
+      things = _ref2.things;
 
-  var path = location.pathname;
+  var path = router.location.pathname;
   var tabs = [{
     title: 'Home',
     path: '/'
   }, {
     title: 'Things',
-    path: '/things'
+    path: '/things',
+    count: things.length
   }, {
     title: 'Users',
-    path: '/users'
+    path: '/users',
+    count: users.length
   }];
 
   return _react2.default.createElement(

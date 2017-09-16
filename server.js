@@ -22,11 +22,12 @@ conn.sync({ force: true })
         User.create({ name: 'Moe' }),
         User.create({ name: 'Larry' }),
         User.create({ name: 'Curly' }),
+        User.create({ name: 'Shep' }),
         Thing.create({ name: 'foo' }),
         Thing.create({ name: 'bar' }),
         Thing.create({ name: 'bazz' })
       ])
-      .then(([ moe, larry, curly, foo, bar, bazz ]) => {
+      .then(([ moe, larry, curly, shep, foo, bar, bazz ]) => {
         return Promise.all([
           moe.addThing(foo),
           larry.addThing(bar),

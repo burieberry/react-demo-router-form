@@ -4,13 +4,16 @@ import { Link } from 'react-router-dom';
 const Tab = ({ tab, path }) => {
   return (
     <li className={ path === tab.path ? 'active' : null }>
-      <Link to={ tab.path }>{ tab.title }</Link>
+      <Link to={ tab.path }>
+        { tab.title }
+        { tab.count === undefined ? null : <span> ({ tab.count })</span> }
+      </Link>
     </li>
   )
 }
 
-const Nav = ({ location }) => {
-  const path = location.pathname;
+const Nav = ({ router, users, things }) => {
+  const path = router.location.pathname;
   const tabs = [
     {
       title: 'Home',
@@ -18,11 +21,13 @@ const Nav = ({ location }) => {
     },
     {
       title: 'Things',
-      path: '/things'
+      path: '/things',
+      count: things.length
     },
     {
       title: 'Users',
-      path: '/users'
+      path: '/users',
+      count: users.length
     }
   ];
 
