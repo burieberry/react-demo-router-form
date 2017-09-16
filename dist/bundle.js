@@ -23082,6 +23082,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(21);
@@ -23092,17 +23094,21 @@ var _axios = __webpack_require__(192);
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _Title = __webpack_require__(211);
-
-var _Title2 = _interopRequireDefault(_Title);
-
-var _UserList = __webpack_require__(212);
+var _UserList = __webpack_require__(211);
 
 var _UserList2 = _interopRequireDefault(_UserList);
 
-var _User = __webpack_require__(213);
+var _ThingList = __webpack_require__(212);
 
-var _User2 = _interopRequireDefault(_User);
+var _ThingList2 = _interopRequireDefault(_ThingList);
+
+var _Home = __webpack_require__(213);
+
+var _Home2 = _interopRequireDefault(_Home);
+
+var _Nav = __webpack_require__(214);
+
+var _Nav2 = _interopRequireDefault(_Nav);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23122,10 +23128,8 @@ var App = function (_Component) {
 
     _this.state = {
       users: [],
-      user: {}
+      things: []
     };
-    _this.onSelect = _this.onSelect.bind(_this);
-    _this.onDeselect = _this.onDeselect.bind(_this);
     return _this;
   }
 
@@ -23134,39 +23138,37 @@ var App = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      _axios2.default.get('/api/users').then(function (result) {
-        return _this2.setState({ users: result.data });
-      });
-    }
-  }, {
-    key: 'onSelect',
-    value: function onSelect(user) {
-      var _this3 = this;
+      Promise.all([_axios2.default.get('/api/users'), _axios2.default.get('/api/things')]).then(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            users = _ref2[0],
+            things = _ref2[1];
 
-      _axios2.default.get('/api/users/' + user.id).then(function (result) {
-        return _this3.setState({ user: result.data });
+        _this2.setState({
+          users: users.data,
+          things: things.data
+        });
       });
-    }
-  }, {
-    key: 'onDeselect',
-    value: function onDeselect() {
-      this.setState({ user: {} });
     }
   }, {
     key: 'render',
     value: function render() {
       var _state = this.state,
           users = _state.users,
-          user = _state.user;
-      var onSelect = this.onSelect,
-          onDeselect = this.onDeselect;
+          things = _state.things;
 
 
       return _react2.default.createElement(
         'div',
-        { className: 'row' },
-        _react2.default.createElement(_Title2.default, { title: 'My App' }),
-        user.id ? _react2.default.createElement(_User2.default, { user: user, onDeselect: onDeselect }) : _react2.default.createElement(_UserList2.default, { users: users, onSelect: onSelect })
+        { className: 'container' },
+        _react2.default.createElement(
+          'h1',
+          null,
+          'Users and Things'
+        ),
+        _react2.default.createElement(_Nav2.default, null),
+        _react2.default.createElement(_UserList2.default, { users: users }),
+        _react2.default.createElement(_ThingList2.default, { things: things }),
+        _react2.default.createElement(_Home2.default, null)
       );
     }
   }]);
@@ -24067,17 +24069,32 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Title = function Title(_ref) {
-  var _ref$title = _ref.title,
-      title = _ref$title === undefined ? 'My Title' : _ref$title;
+var UserList = function UserList(_ref) {
+  var users = _ref.users;
+
   return _react2.default.createElement(
-    'h1',
+    "div",
     null,
-    title
+    _react2.default.createElement(
+      "h2",
+      null,
+      "Users"
+    ),
+    _react2.default.createElement(
+      "ul",
+      { className: "list-group" },
+      users.map(function (user) {
+        return _react2.default.createElement(
+          "li",
+          { className: "list-group-item", key: user.id },
+          user.name
+        );
+      })
+    )
   );
 };
 
-exports.default = Title;
+exports.default = UserList;
 
 /***/ }),
 /* 212 */
@@ -24096,25 +24113,32 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var UserList = function UserList(_ref) {
-  var users = _ref.users,
-      onSelect = _ref.onSelect;
+var ThingList = function ThingList(_ref) {
+  var things = _ref.things;
+
   return _react2.default.createElement(
-    "ul",
-    { className: "list-group" },
-    users.map(function (user) {
-      return _react2.default.createElement(
-        "li",
-        { className: "list-group-item", onClick: function onClick() {
-            return onSelect(user);
-          }, key: user.id },
-        user.name
-      );
-    })
+    "div",
+    null,
+    _react2.default.createElement(
+      "h2",
+      null,
+      "Things"
+    ),
+    _react2.default.createElement(
+      "ul",
+      { className: "list-group" },
+      things.map(function (thing) {
+        return _react2.default.createElement(
+          "li",
+          { className: "list-group-item", key: thing.id },
+          thing.name
+        );
+      })
+    )
   );
 };
 
-exports.default = UserList;
+exports.default = ThingList;
 
 /***/ }),
 /* 213 */
@@ -24133,32 +24157,69 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var User = function User(_ref) {
-  var user = _ref.user,
-      onDeselect = _ref.onDeselect;
+var Home = function Home() {
   return _react2.default.createElement(
     "div",
+    { className: "well" },
+    "Welcome!!!"
+  );
+};
+
+exports.default = Home;
+
+/***/ }),
+/* 214 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(21);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Tab = function Tab(_ref) {
+  var tab = _ref.tab;
+
+  return _react2.default.createElement(
+    'li',
     null,
     _react2.default.createElement(
-      "h2",
-      { onClick: onDeselect },
-      user.name
-    ),
-    _react2.default.createElement(
-      "ul",
-      { className: "list-group" },
-      user.things.map(function (thing) {
-        return _react2.default.createElement(
-          "li",
-          { className: "list-group-item", key: thing.id },
-          thing.name
-        );
-      })
+      'a',
+      { href: tab.path },
+      tab.title
     )
   );
 };
 
-exports.default = User;
+var Nav = function Nav() {
+  var tabs = [{
+    title: 'Home',
+    path: '/'
+  }, {
+    title: 'Things',
+    path: '/things'
+  }, {
+    title: 'Users',
+    path: '/users'
+  }];
+
+  return _react2.default.createElement(
+    'ul',
+    { className: 'nav nav-tabs' },
+    tabs.map(function (tab) {
+      return _react2.default.createElement(Tab, { key: tab.path, tab: tab });
+    })
+  );
+};
+
+exports.default = Nav;
 
 /***/ })
 /******/ ]);

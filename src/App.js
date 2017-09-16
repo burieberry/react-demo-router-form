@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import UserList from './UserList';
-import ThingsList from './ThingList';
+import ThingList from './ThingList';
 import Home from './Home';
+import Nav from './Nav';
 
 class App extends Component{
   constructor() {
@@ -32,8 +33,10 @@ class App extends Component{
     return (
        <div className="container">
         <h1>Users and Things</h1>
-        <h2>{ users.length }</h2>
-        <h2>{ things.length }</h2>
+        <Nav />
+        <UserList users={ users } />
+        <ThingList  things={ things } />
+        <Home />
        </div>
     )
   }
