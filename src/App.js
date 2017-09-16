@@ -36,7 +36,7 @@ class App extends Component{
         <h1>Users and Things</h1>
         <Route render={ (router) => <Nav users={ users } things={ things } router={ router } /> } />
         <Route exact path="/" component={ Home } />
-        <Route exact path="/users" render={ () => <UserList users={ users } /> } />
+        <Route path="/users" render={ () => <UserList users={ users } /> } />
         <Route exact path="/things" render={ () => <ThingList things={ things } /> } />
        </div>
     );

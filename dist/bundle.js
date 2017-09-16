@@ -23177,7 +23177,7 @@ var App = function (_Component) {
             return _react2.default.createElement(_Nav2.default, { users: users, things: things, router: router });
           } }),
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
-        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/users', render: function render() {
+        _react2.default.createElement(_reactRouterDom.Route, { path: '/users', render: function render() {
             return _react2.default.createElement(_UserList2.default, { users: users });
           } }),
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/things', render: function render() {
@@ -24077,32 +24077,123 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(21);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = __webpack_require__(234);
+
+var _axios = __webpack_require__(192);
+
+var _axios2 = _interopRequireDefault(_axios);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var UserList = function UserList(_ref) {
-  var users = _ref.users;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var User = function (_Component) {
+  _inherits(User, _Component);
+
+  function User(props) {
+    _classCallCheck(this, User);
+
+    var _this = _possibleConstructorReturn(this, (User.__proto__ || Object.getPrototypeOf(User)).call(this, props));
+
+    _this.state = {
+      user: {}
+    };
+    return _this;
+  }
+
+  _createClass(User, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(props) {
+      var _this2 = this;
+
+      var match = props.match;
+      var user = this.state.user;
+
+
+      if (user.id && user.id !== match.params.id * 1) {
+        _axios2.default.get('/api/users/' + match.params.id).then(function (result) {
+          _this2.setState({ user: result.data });
+        });
+      }
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this3 = this;
+
+      var match = this.props.match;
+
+      _axios2.default.get('/api/users/' + match.params.id).then(function (result) {
+        _this3.setState({ user: result.data });
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var user = this.state.user;
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'well' },
+        user.things === undefined ? null : _react2.default.createElement(
+          'ul',
+          { className: 'list-group' },
+          user.things.map(function (thing) {
+            return _react2.default.createElement(
+              'li',
+              { className: 'list-group-item', key: thing.id },
+              thing.name
+            );
+          })
+        )
+      );
+    }
+  }]);
+
+  return User;
+}(_react.Component);
+
+var UserItem = function UserItem(_ref) {
+  var user = _ref.user;
 
   return _react2.default.createElement(
-    "div",
+    'li',
+    { className: 'list-group-item' },
+    _react2.default.createElement(
+      _reactRouterDom.Link,
+      { to: '/users/' + user.id },
+      user.name
+    )
+  );
+};
+
+var UserList = function UserList(_ref2) {
+  var users = _ref2.users;
+
+  return _react2.default.createElement(
+    'div',
     null,
     _react2.default.createElement(
-      "h2",
+      'h2',
       null,
-      "Users"
+      'Users'
     ),
+    _react2.default.createElement(_reactRouterDom.Route, { path: '/users/:id', component: User }),
     _react2.default.createElement(
-      "ul",
-      { className: "list-group" },
+      'ul',
+      { className: 'list-group' },
       users.map(function (user) {
-        return _react2.default.createElement(
-          "li",
-          { className: "list-group-item", key: user.id },
-          user.name
-        );
+        return _react2.default.createElement(UserItem, { key: user.id, user: user });
       })
     )
   );
