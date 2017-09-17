@@ -14,7 +14,14 @@ const Thing = conn.define('thing', {
   name: Sequelize.STRING
 });
 
-User.hasMany(Thing);
+const UserThing = conn.define('user_thing', {
+});
+
+UserThing.belongsTo(User);
+UserThing.belongsTo(Thing);
+
+User.hasMany(UserThing);
+Thing.hasMany(UserThing);
 
 conn.sync({ force: true })
   .then(() => {
@@ -22,41 +29,66 @@ conn.sync({ force: true })
         User.create({ name: 'Moe' }),
         User.create({ name: 'Larry' }),
         User.create({ name: 'Curly' }),
-        User.create({ name: 'Shep' }),
         Thing.create({ name: 'foo' }),
         Thing.create({ name: 'bar' }),
-        Thing.create({ name: 'bazz' })
+        Thing.create({ name: 'bazz' }),
+        User.create({ name: 'Shep' })
       ])
-      .then(([ moe, larry, curly, shep, foo, bar, bazz ]) => {
+      .then(([ moe, larry, curly, foo, bar, bazz ]) => {
         return Promise.all([
-          moe.addThing(foo),
-          larry.addThing(bar),
-          curly.addThing(bazz)
+          UserThing.create({ userId: moe.id, thingId: foo.id }),
+          UserThing.create({ userId: moe.id, thingId: foo.id }),
+          UserThing.create({ userId: moe.id, thingId: foo.id }),
+          UserThing.create({ userId: larry.id, thingId: bar.id }),
+          UserThing.create({ userId: larry.id, thingId: bazz.id }),
+          UserThing.create({ userId: curly.id, thingId: bazz.id })
         ]);
       });
   });
 
 app.use('/dist', express.static(path.join(__dirname, 'dist')));
+app.use('/vendor', express.static(path.join(__dirname, 'node_modules')));
 
 app.get('/', (req, res, next) => { res.sendFile(path.join(__dirname, 'index.html')) });
 
 app.get('/api/users', (req, res, next) => {
-  User.findAll()
+  User.findAll({
+    include: [
+      {
+        model: UserThing,
+        include: [ Thing, User ]
+      }
+    ]
+  })
     .then(users => res.send(users))
     .catch(next);
 });
 
-app.get('/api/things', (req, res, next) => {
-  Thing.findAll()
-    .then(things => res.send(things))
-    .catch(next);
-})
-
 app.get('/api/users/:id', (req, res, next) => {
-  User.findById(req.params.id, { include: [ Thing ] })
+  User.findById(req.params.id, {
+      include: [
+        {
+          model: UserThing,
+          include: [ Thing, User ]
+        }
+      ]
+    })
     .then(user => res.send(user))
     .catch(next);
 });
+
+app.get('/api/things', (req, res, next) => {
+  Thing.findAll({
+      include: [
+        {
+          model: UserThing,
+          include: [ Thing, User ]
+        }
+      ]
+    })
+    .then(things => res.send(things))
+    .catch(next);
+})
 
 const port = process.env.PORT || 3000;
 

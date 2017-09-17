@@ -34,13 +34,15 @@ class User extends Component{
     const { user } = this.state;
     return (
       <div className="well">
-      { user.things === undefined ? null :
+      <h4>Details:</h4>
+      { user.user_things === undefined || user.user_things.length === 0 ?
+        ( `${ user.name } has nothing.` ) :
         (
           <ul className="list-group">
             {
-              user.things.map(thing => {
+              user.user_things.map(userThing => {
                 return (
-                  <li className="list-group-item" key={ thing.id }>{ thing.name }</li>
+                  <li className="list-group-item" key={ userThing.id }>{ userThing.thing.name }</li>
                 )
               })
             }
