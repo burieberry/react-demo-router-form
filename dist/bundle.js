@@ -27632,15 +27632,15 @@ var _UserList = __webpack_require__(258);
 
 var _UserList2 = _interopRequireDefault(_UserList);
 
-var _ThingList = __webpack_require__(259);
+var _ThingList = __webpack_require__(260);
 
 var _ThingList2 = _interopRequireDefault(_ThingList);
 
-var _Home = __webpack_require__(260);
+var _Home = __webpack_require__(261);
 
 var _Home2 = _interopRequireDefault(_Home);
 
-var _Nav = __webpack_require__(261);
+var _Nav = __webpack_require__(262);
 
 var _Nav2 = _interopRequireDefault(_Nav);
 
@@ -28597,13 +28597,72 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(6);
 
 var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(39);
+
+var _User = __webpack_require__(259);
+
+var _User2 = _interopRequireDefault(_User);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var UserItem = function UserItem(_ref) {
+  var user = _ref.user;
+
+  return _react2.default.createElement(
+    'li',
+    { className: 'list-group-item' },
+    _react2.default.createElement(
+      _reactRouterDom.Link,
+      { to: '/users/' + user.id },
+      user.name
+    )
+  );
+};
+
+var UserList = function UserList(_ref2) {
+  var users = _ref2.users;
+
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'h2',
+      null,
+      'Users'
+    ),
+    _react2.default.createElement(_reactRouterDom.Route, { path: '/users/:id', component: _User2.default }),
+    _react2.default.createElement(
+      'ul',
+      { className: 'list-group' },
+      users.map(function (user) {
+        return _react2.default.createElement(UserItem, { key: user.id, user: user });
+      })
+    )
+  );
+};
+
+exports.default = UserList;
+
+/***/ }),
+/* 259 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(6);
+
+var _react2 = _interopRequireDefault(_react);
 
 var _axios = __webpack_require__(105);
 
@@ -28620,10 +28679,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var User = function (_Component) {
   _inherits(User, _Component);
 
-  function User(props) {
+  function User() {
     _classCallCheck(this, User);
 
-    var _this = _possibleConstructorReturn(this, (User.__proto__ || Object.getPrototypeOf(User)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (User.__proto__ || Object.getPrototypeOf(User)).call(this));
 
     _this.state = {
       user: {}
@@ -28688,46 +28747,10 @@ var User = function (_Component) {
   return User;
 }(_react.Component);
 
-var UserItem = function UserItem(_ref) {
-  var user = _ref.user;
-
-  return _react2.default.createElement(
-    'li',
-    { className: 'list-group-item' },
-    _react2.default.createElement(
-      _reactRouterDom.Link,
-      { to: '/users/' + user.id },
-      user.name
-    )
-  );
-};
-
-var UserList = function UserList(_ref2) {
-  var users = _ref2.users;
-
-  return _react2.default.createElement(
-    'div',
-    null,
-    _react2.default.createElement(
-      'h2',
-      null,
-      'Users'
-    ),
-    _react2.default.createElement(_reactRouterDom.Route, { path: '/users/:id', component: User }),
-    _react2.default.createElement(
-      'ul',
-      { className: 'list-group' },
-      users.map(function (user) {
-        return _react2.default.createElement(UserItem, { key: user.id, user: user });
-      })
-    )
-  );
-};
-
-exports.default = UserList;
+exports.default = User;
 
 /***/ }),
-/* 259 */
+/* 260 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28771,7 +28794,7 @@ var ThingList = function ThingList(_ref) {
 exports.default = ThingList;
 
 /***/ }),
-/* 260 */
+/* 261 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28798,7 +28821,7 @@ var Home = function Home() {
 exports.default = Home;
 
 /***/ }),
-/* 261 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
