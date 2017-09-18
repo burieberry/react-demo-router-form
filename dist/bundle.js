@@ -27632,15 +27632,15 @@ var _UserList = __webpack_require__(258);
 
 var _UserList2 = _interopRequireDefault(_UserList);
 
-var _ThingList = __webpack_require__(260);
+var _ThingList = __webpack_require__(261);
 
 var _ThingList2 = _interopRequireDefault(_ThingList);
 
-var _Home = __webpack_require__(261);
+var _Home = __webpack_require__(262);
 
 var _Home2 = _interopRequireDefault(_Home);
 
-var _Nav = __webpack_require__(262);
+var _Nav = __webpack_require__(263);
 
 var _Nav2 = _interopRequireDefault(_Nav);
 
@@ -27664,22 +27664,34 @@ var App = function (_Component) {
       users: [],
       things: []
     };
+    _this.onSaveUser = _this.onSaveUser.bind(_this);
     return _this;
   }
 
   _createClass(App, [{
+    key: 'onSaveUser',
+    value: function onSaveUser(user) {
+      var _this2 = this;
+
+      return _axios2.default.post('/api/users', user).then(function (result) {
+        return _axios2.default.get('/api/users');
+      }).then(function (result) {
+        return _this2.setState({ users: result.data });
+      });
+    }
+  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this2 = this;
+      var _this3 = this;
 
       Promise.all([_axios2.default.get('/api/users'), _axios2.default.get('/api/things')]).then(function (_ref) {
         var _ref2 = _slicedToArray(_ref, 2),
-            users = _ref2[0],
-            things = _ref2[1];
+            usersData = _ref2[0],
+            thingsData = _ref2[1];
 
-        _this2.setState({
-          users: users.data,
-          things: things.data
+        _this3.setState({
+          users: usersData.data,
+          things: thingsData.data
         });
       });
     }
@@ -27689,7 +27701,7 @@ var App = function (_Component) {
       var _state = this.state,
           users = _state.users,
           things = _state.things;
-
+      var onSaveUser = this.onSaveUser;
 
       return _react2.default.createElement(
         'div',
@@ -27704,7 +27716,7 @@ var App = function (_Component) {
           } }),
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Home2.default }),
         _react2.default.createElement(_reactRouterDom.Route, { path: '/users', render: function render() {
-            return _react2.default.createElement(_UserList2.default, { users: users });
+            return _react2.default.createElement(_UserList2.default, { onSaveUser: onSaveUser, users: users });
           } }),
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/things', render: function render() {
             return _react2.default.createElement(_ThingList2.default, { things: things });
@@ -28607,6 +28619,10 @@ var _User = __webpack_require__(259);
 
 var _User2 = _interopRequireDefault(_User);
 
+var _UserForm = __webpack_require__(260);
+
+var _UserForm2 = _interopRequireDefault(_UserForm);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var UserItem = function UserItem(_ref) {
@@ -28624,7 +28640,8 @@ var UserItem = function UserItem(_ref) {
 };
 
 var UserList = function UserList(_ref2) {
-  var users = _ref2.users;
+  var users = _ref2.users,
+      onSaveUser = _ref2.onSaveUser;
 
   return _react2.default.createElement(
     'div',
@@ -28635,6 +28652,7 @@ var UserList = function UserList(_ref2) {
       'Users'
     ),
     _react2.default.createElement(_reactRouterDom.Route, { path: '/users/:id', component: _User2.default }),
+    _react2.default.createElement(_UserForm2.default, { onSave: onSaveUser }),
     _react2.default.createElement(
       'ul',
       { className: 'list-group' },
@@ -28760,6 +28778,96 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(6);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var UserForm = function (_Component) {
+  _inherits(UserForm, _Component);
+
+  function UserForm() {
+    _classCallCheck(this, UserForm);
+
+    var _this = _possibleConstructorReturn(this, (UserForm.__proto__ || Object.getPrototypeOf(UserForm)).call(this));
+
+    _this.state = {
+      name: ''
+    };
+    _this.onNameChange = _this.onNameChange.bind(_this);
+    _this.onSave = _this.onSave.bind(_this);
+    return _this;
+  }
+
+  _createClass(UserForm, [{
+    key: 'onNameChange',
+    value: function onNameChange(event) {
+      this.setState({ name: event.target.value });
+    }
+  }, {
+    key: 'onSave',
+    value: function onSave(event) {
+      var _this2 = this;
+
+      event.preventDefault();
+      this.props.onSave(this.state).then(function () {
+        return _this2.setState({ name: '' });
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var name = this.state.name;
+      var onNameChange = this.onNameChange,
+          onSave = this.onSave;
+
+      return _react2.default.createElement(
+        'form',
+        { className: 'well', onSubmit: onSave },
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group' },
+          _react2.default.createElement(
+            'label',
+            null,
+            'Name'
+          ),
+          _react2.default.createElement('input', { onChange: onNameChange, className: 'form-control', value: name })
+        ),
+        _react2.default.createElement(
+          'button',
+          { className: 'btn btn-primary' },
+          'Save'
+        )
+      );
+    }
+  }]);
+
+  return UserForm;
+}(_react.Component);
+
+exports.default = UserForm;
+
+/***/ }),
+/* 261 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _react = __webpack_require__(6);
 
 var _react2 = _interopRequireDefault(_react);
@@ -28794,7 +28902,7 @@ var ThingList = function ThingList(_ref) {
 exports.default = ThingList;
 
 /***/ }),
-/* 261 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28821,7 +28929,7 @@ var Home = function Home() {
 exports.default = Home;
 
 /***/ }),
-/* 262 */
+/* 263 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

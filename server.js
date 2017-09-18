@@ -3,11 +3,16 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
+app.use(require('body-parser').json());
+
 const Sequelize = require('sequelize');
 const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/my_db', { logging: false });
 
 const User = conn.define('user', {
-  name: Sequelize.STRING
+  name: {
+    type: Sequelize.STRING,
+    unique: true
+  }
 });
 
 const Thing = conn.define('thing', {
@@ -28,20 +33,20 @@ conn.sync({ force: true })
     return Promise.all([
         User.create({ name: 'Moe' }),
         User.create({ name: 'Larry' }),
-        User.create({ name: 'Curly' }),
+        User.create({ name: 'Susan' }),
         Thing.create({ name: 'foo' }),
         Thing.create({ name: 'bar' }),
         Thing.create({ name: 'bazz' }),
         User.create({ name: 'Shep' })
       ])
-      .then(([ moe, larry, curly, foo, bar, bazz ]) => {
+      .then(([ moe, larry, susan, foo, bar, bazz ]) => {
         return Promise.all([
           UserThing.create({ userId: moe.id, thingId: foo.id }),
-          UserThing.create({ userId: moe.id, thingId: foo.id }),
-          UserThing.create({ userId: moe.id, thingId: foo.id }),
+          UserThing.create({ userId: moe.id, thingId: bar.id }),
+          UserThing.create({ userId: moe.id, thingId: bazz.id }),
           UserThing.create({ userId: larry.id, thingId: bar.id }),
           UserThing.create({ userId: larry.id, thingId: bazz.id }),
-          UserThing.create({ userId: curly.id, thingId: bazz.id })
+          UserThing.create({ userId: susan.id, thingId: bazz.id })
         ]);
       });
   });
@@ -88,7 +93,13 @@ app.get('/api/things', (req, res, next) => {
     })
     .then(things => res.send(things))
     .catch(next);
-})
+});
+
+app.post('/api/users', (req, res, next) => {
+  User.create(req.body)
+    .then(() => res.sendStatus(204))
+    .catch(next);
+});
 
 const port = process.env.PORT || 3000;
 

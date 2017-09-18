@@ -13,6 +13,13 @@ class App extends Component{
       users: [],
       things: []
     };
+    this.onSaveUser = this.onSaveUser.bind(this);
+  }
+
+  onSaveUser(user) {
+    return axios.post('/api/users', user)
+      .then(result => axios.get('/api/users'))
+      .then(result => this.setState({ users: result.data }))
   }
 
   componentDidMount() {
@@ -20,23 +27,23 @@ class App extends Component{
         axios.get('/api/users'),
         axios.get('/api/things'),
       ])
-      .then(([ users, things ]) => {
+      .then(([ usersData, thingsData ]) => {
         this.setState({
-          users: users.data,
-          things: things.data
+          users: usersData.data,
+          things: thingsData.data
         });
       })
   }
 
   render() {
     const { users, things } = this.state;
-
+    const { onSaveUser } = this;
     return (
        <div className="container">
         <h1>Users and Things</h1>
         <Route render={ (router) => <Nav users={ users } things={ things } router={ router } /> } />
         <Route exact path="/" component={ Home } />
-        <Route path="/users" render={ () => <UserList users={ users } /> } />
+        <Route path="/users" render={ () => <UserList onSaveUser={ onSaveUser }  users={ users } /> } />
         <Route exact path="/things" render={ () => <ThingList things={ things } /> } />
        </div>
     );

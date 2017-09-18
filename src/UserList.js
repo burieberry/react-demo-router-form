@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route, Link } from 'react-router-dom';
 import User from './User';
+import UserForm from './UserForm';
 
 const UserItem = ({ user }) => {
   return (
@@ -12,11 +13,12 @@ const UserItem = ({ user }) => {
   );
 };
 
-const UserList = ({ users }) => {
+const UserList = ({ users, onSaveUser }) => {
   return (
     <div>
       <h2>Users</h2>
       <Route path="/users/:id" component={ User } />
+      <UserForm onSave={ onSaveUser } />
       <ul className="list-group">
         {
           users.map(user => {
